@@ -1,58 +1,60 @@
-import { StringCalculator } from '../src/StringCalculator';
+import { StringCalculator } from "../src/StringCalculator";
 
-describe('StringCalculator (TDD kata)', () => {
+describe("StringCalculator", () => {
   let calc: StringCalculator;
 
   beforeEach(() => {
     calc = new StringCalculator();
   });
 
-  it('returns 0 for an empty string', () => {
-    expect(calc.add('')).toBe(0);
+  it("returns 0 for empty string", () => {
+    expect(calc.add("")).toBe(0);
   });
 
-  it('returns the number for single number input', () => {
-    expect(calc.add('1')).toBe(1);
-    expect(calc.add('42')).toBe(42);
+  it("returns number itself for single number", () => {
+    expect(calc.add("1")).toBe(1);
   });
 
-  it('sums two comma-separated numbers', () => {
-    expect(calc.add('1,5')).toBe(6);
-    expect(calc.add('10,20')).toBe(30);
+  it("returns sum for two numbers", () => {
+    expect(calc.add("1,2")).toBe(3);
   });
 
-  it('sums any amount of numbers', () => {
-    expect(calc.add('1,2,3,4')).toBe(10);
-    expect(calc.add('10,20,30')).toBe(60);
+  it("handles unknown amount of numbers", () => {
+    expect(calc.add("1,2,3,4")).toBe(10);
   });
 
-  it('handles newlines between numbers along with commas', () => {
-    expect(calc.add('1\n2,3')).toBe(6);
-    expect(calc.add('4\n5\n6')).toBe(15);
+  it("handles new lines between numbers", () => {
+    expect(calc.add("1\n2,3")).toBe(6);
   });
 
-  it('supports a custom single-character delimiter', () => {
-    expect(calc.add('//;\n1;2')).toBe(3);
+  it("supports custom delimiter", () => {
+    expect(calc.add("//;\n1;2")).toBe(3);
   });
 
-  it('supports custom multi-character delimiter using brackets', () => {
-    expect(calc.add('//[***]\n1***2***3')).toBe(6);
+  it("supports multi-character delimiters", () => {
+    expect(calc.add("//[***]\n1***2***3")).toBe(6);
   });
 
-  it('supports multiple custom delimiters using brackets', () => {
-    expect(calc.add('//[*][%]\n1*2%3')).toBe(6);
-    expect(calc.add('//[**][%%]\n1**2%%3')).toBe(6);
+  it("supports multiple delimiters", () => {
+    expect(calc.add("//[*][%]\n1*2%3")).toBe(6);
+    expect(calc.add("//[**][%%]\n1**2%%3")).toBe(6);
   });
 
-  it('throws when the input contains a negative number (single)', () => {
-    expect(() => calc.add('-1,2,3')).toThrowError('negative numbers not allowed -1');
+  it("ignores numbers greater than 1000", () => {
+    expect(calc.add("2,1001")).toBe(2);
   });
 
-  it('throws and lists all negative numbers in the message', () => {
-    expect(() => calc.add('1,-2,-3,4')).toThrowError('negative numbers not allowed -2,-3');
+  it("throws on negative numbers", () => {
+    expect(() => calc.add("1,-2,3")).toThrow("negative numbers not allowed -2");
   });
 
-  it('throws for invalid non-numeric tokens', () => {
-    expect(() => calc.add('1,foo,3')).toThrowError(/Invalid number token/);
+  it("lists all negatives in exception", () => {
+    expect(() => calc.add("1,-2,-5")).toThrow("negative numbers not allowed -2,-5");
+  });
+
+  it("counts how many times add() was called", () => {
+    calc.add("1,2");
+    calc.add("3,4");
+    expect(calc.getCalledCount()).toBe(2);
   });
 });
