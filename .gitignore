@@ -1,0 +1,14 @@
+# Node modules
+node_modules/
+
+# Dependency directories
+jspm_packages/
+dist/
+build/
+
+# Local environment variables
+.env
+
+# Coverage and test output
+coverage/
+*.lcov
